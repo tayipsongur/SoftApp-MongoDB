@@ -19,59 +19,39 @@ namespace SoftApp_MongoDB.Controllers
         [HttpGet(nameof(GetAllUser))]
         public List<User> GetAllUser()
         {
-            try
-            {
-                return _userService.GetUsers();
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return _userService.GetUsers();
         }
         [HttpGet(nameof(GetAllUser2))]
 
         public List<User> GetAllUser2()
         {
-            try
-            {
-                return _userService.Collections();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return _userService.Collections();
         }
 
         [HttpPost(nameof(InsertUser))]
 
-        public void InsertUser([FromBody]User user)
+        public void InsertUser([FromBody] User user)
         {
-            try
-            {
-                _userService.InsertUser(user);
+            _userService.InsertUser(user);
+        }
 
-            }
-            catch (Exception)
-            {
+        [HttpPost(nameof(UpdateUser))]
+        public User UpdateUser([FromBody] User user)
+        {
+            return _userService.UpdateUser(user);
+        }
 
-                throw;
-            }
+        [HttpPost(nameof(DeleteEntity))]
+        public bool DeleteEntity([FromBody] User user)
+        {
+            var result = _userService.DeleteEntity(user);
+            return result;
         }
 
         [HttpPost(nameof(InsertUserList))]
-        public void InsertUserList([FromBody]List<User> users)
+        public void InsertUserList([FromBody] List<User> users)
         {
-            try
-            {
-                _userService.InsertList(users);
-            }
-            catch (Exception)
-            {
-                throw new Exception();
-            }
+            _userService.InsertList(users);
         }
     }
 }

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoftApp.MongoDB\SoftApp.MongoDB.csproj" />
+    <ProjectReference Include="..\SoftAppException\SoftApp.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,7 @@ namespace SoftApp_MongoDB.Services
         List<User> Collections();
         void InsertUser(User user);
         User UpdateUser(User user);
+        bool DeleteEntity(User user);
         void InsertList([FromBody] List<User> users);
     }
 }

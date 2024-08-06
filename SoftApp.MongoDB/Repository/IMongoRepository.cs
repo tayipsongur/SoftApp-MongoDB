@@ -18,7 +18,7 @@ namespace SoftApp.MongoDB.Repository
 
         void Update(IList<T> entities);
 
-        void Delete(T entity);
+        bool Delete(T entity);
 
         IEnumerable<T> GetJsonList();
 

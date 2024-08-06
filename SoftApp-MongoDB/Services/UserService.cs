@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SoftApp.MongoDB.Repository;
 using SoftApp_MongoDB.Models;
-using System.Text.Json.Serialization;
 
 namespace SoftApp_MongoDB.Services
 {
@@ -35,17 +34,15 @@ namespace SoftApp_MongoDB.Services
             var updatedUser = _userRepository.Update(user);
             return updatedUser;
         }
+        public bool DeleteEntity(User user)
+        {
+            var result = _userRepository.Delete(user);
+            return result;
+        }
 
         public void InsertList([FromBody] List<User> users)
         {
-            try
-            {
-                _userRepository.Insert(users);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(ex.Message.ToString());
-            }
+            _userRepository.Insert(users);
         }
     }
 }

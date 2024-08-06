@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using SoftApp.Exceptions.Middleware;
 using SoftApp.MongoDB;
 using SoftApp.MongoDB.JsonUpload;
 using SoftApp.MongoDB.MongoDB;
@@ -36,12 +37,13 @@ namespace SoftApp_MongoDB
             builder.Services.AddTransient<IUserService, UserService>();
 
             var app = builder.Build();
-
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseMiddleware<ExceptionHandler>();
             }
 
             app.UseHttpsRedirection();

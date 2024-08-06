@@ -20,22 +20,30 @@ namespace SoftApp.MongoDB.Repository
 
         IQueryable<T> IMongoRepository<T>.Collection => _collection.AsQueryable();
 
-
         public IQueryable<T> GetAllEntities()
         {
             return _collection.AsQueryable();
         }
 
-
-        public void Delete(T entity)
+        public bool Delete(T entity)
         {
-            var objectId = entity.GetType().GetProperty("_id").GetValue(entity).ToString();
-            _collection.DeleteOne(Builders<T>.Filter.Eq("_id", objectId));
+            var objectId = entity.GetType().GetProperty("Id");
+            if (objectId is not null)
+            {
+                var objectIdValue = objectId.GetValue(entity);
+                var isAlsoDb = _collection.Find(Builders<T>.Filter.Eq("Id", objectIdValue)).FirstOrDefault();
+                if (isAlsoDb is not null)
+                {
+                    var result = _collection.DeleteOne(Builders<T>.Filter.Eq("Id", objectIdValue));
+                    return true;
+                }
+            }
+            return false;
         }
 
         public T GetById(object id)
         {
-            T entity = _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefault();
+            T entity = _collection.Find(Builders<T>.Filter.Eq("Id", id)).FirstOrDefault();
             return entity;
         }
 
@@ -57,11 +65,27 @@ namespace SoftApp.MongoDB.Repository
         public T Update(T entity)
         {
             EntityCheck(entity);
-            var objectId = entity.GetType().GetProperty("_id").GetValue(entity).ToString();
-            _collection.ReplaceOne(Builders<T>.Filter.Eq("_id", objectId), entity);
+            var objectIdProperty = entity.GetType().GetProperty("Id"); // Or "id" or "_id" depending on your property name
+            if (objectIdProperty is not null)
+            {
+                var objectIdValue = objectIdProperty.GetValue(entity);
+                if (objectIdValue is not null)
+                {
+                    _collection.ReplaceOne(Builders<T>.Filter.Eq("Id", objectIdValue), entity);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Object id value is null!");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Object id property is null!");
+            }
 
             return entity;
         }
+
 
         public void Update(IList<T> entities)
         {
@@ -69,7 +93,7 @@ namespace SoftApp.MongoDB.Repository
             foreach (var entity in entities)
             {
                 {
-                    var idProperty = entity.GetType().GetProperty("_id");
+                    var idProperty = entity.GetType().GetProperty("Id");
                     if (idProperty is null)
                     {
                         throw new ArgumentNullException((nameof(entities)));
