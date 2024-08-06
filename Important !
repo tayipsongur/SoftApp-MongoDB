@@ -1,0 +1,2 @@
+Implementations of the JsonUploadForMongo class should be ignored.
+The necessary configurations are in the Configuration-MongoDB-Repository classes and program cs. Available in
